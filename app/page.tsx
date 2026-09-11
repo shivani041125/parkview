@@ -1,69 +1,199 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { Menu, X } from "lucide-react";
+import ProjectHighlights from "@/components/ProjectHighlights";
+import WhyChoose from "@/components/WhyChooseUs";
+import Amenities from "@/components/Amenities";
+import FloorPlans from "@/components/FloorPlans";
+import Location from "@/components/Location";
+import Footer from "@/components/Footer";
 
 export default function Home() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <main className="overflow-x-hidden bg-[#f8f7f3]">
+      {/* ================= HERO ================= */}
+      <section className="relative min-h-screen">
+        {/* Background */}
+        <img
+          src="/images/hero/parkviewhero.jpeg"
+          alt="ParkView"
+          className="absolute inset-0 h-full w-full object-cover object-center"
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+
+        {/* ================= NAVBAR ================= */}
+        <header className="relative z-30">
+          <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 md:h-24 md:px-8">
+            {/* Logo */}
+            <Link href="/" className="shrink-0">
+              <img
+                src="/images/logos/parkview-logo.png"
+                alt="ParkView"
+                className="h-14 w-auto md:h-20"
+              />
+            </Link>
+
+            {/* Desktop Nav */}
+            <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-10 text-sm font-medium tracking-wide text-[#0b3543] lg:flex">
+              <Link
+                href="/about"
+                className="transition-opacity hover:opacity-60"
+              >
+                About
+              </Link>
+
+              <a
+                href="#amenities"
+                className="transition-opacity hover:opacity-60"
+              >
+                Amenities
+              </a>
+
+              <a
+                href="#location"
+                className="transition-opacity hover:opacity-60"
+              >
+                Location
+              </a>
+
+              <Link
+                href="/gallery"
+                className="transition-opacity hover:opacity-60"
+              >
+                Gallery
+              </Link>
+            </div>
+
+            {/* Mobile Hamburger */}
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="rounded-md p-2 lg:hidden"
+              aria-label="Toggle Menu"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+              {menuOpen ? (
+                <X size={28} className="text-[#0b3543]" />
+              ) : (
+                <Menu size={28} className="text-[#0b3543]" />
+              )}
+            </button>
+          </nav>
+
+          {/* Mobile Menu */}
+          {menuOpen && (
+            <div className="border-t border-black/10 bg-[#f8f7f3]/95 backdrop-blur lg:hidden">
+              <div className="mx-auto flex max-w-7xl flex-col px-5 py-3 text-[#0b3543]">
+                <Link
+                  href="/about"
+                  onClick={() => setMenuOpen(false)}
+                  className="py-3"
+                >
+                  About
+                </Link>
+
+                <a
+                  href="#amenities"
+                  onClick={() => setMenuOpen(false)}
+                  className="py-3"
+                >
+                  Amenities
+                </a>
+
+                <a
+                  href="#location"
+                  onClick={() => setMenuOpen(false)}
+                  className="py-3"
+                >
+                  Location
+                </a>
+
+                <Link
+                  href="/gallery"
+                  onClick={() => setMenuOpen(false)}
+                  className="py-3"
+                >
+                  Gallery
+                </Link>
+              </div>
+            </div>
+          )}
+        </header>
+
+        {/* Builder Logos */}
+        <div className="absolute right-4 top-20 z-20 flex items-center gap-3 md:right-8 md:top-14 md:gap-6">
+          <img
+            src="/images/logos/project-approved-by.png"
+            alt="HMDA Approved"
+            className="h-10 w-auto object-contain md:h-20"
+          />
+
+          <img
+            src="/images/logos/builder-logo.png"
+            alt="Mathrubhuumi Builders"
+            className="h-10 w-auto object-contain md:h-20"
+          />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        {/* ================= HERO CONTENT ================= */}
+        <div className="relative z-10 mx-auto flex min-h-[calc(100vh-80px)] max-w-7xl items-center px-6 pt-8 pb-20 md:min-h-[calc(100vh-96px)] md:px-12 md:pt-16 md:pb-24 lg:px-16">
+          <div className="w-full max-w-xl md:w-1/2">
+            <p className="mb-4 text-xs font-medium uppercase tracking-[0.3em] text-[#b38a4a] md:text-sm">
+              Premium Residential Apartments
+            </p>
+
+            <h1 className="font-serif text-4xl leading-tight tracking-tight text-[#0b3543] md:text-5xl lg:text-6xl">
+              Live Beside Nature.
+              <br />
+              Live at ParkView.
+            </h1>
+
+            <p className="mt-5 max-w-lg rounded-r-xl border-l-2 border-[#b38a4a] bg-white/30 px-4 py-3 text-base leading-7 text-[#0b3543] backdrop-blur-[2px] md:text-lg md:leading-8">
+              Thoughtfully designed luxury homes with serene park views, modern
+              amenities, and effortless city connectivity.
+            </p>
+
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <a
+                href="#contact"
+                className="inline-flex items-center justify-center rounded-md bg-[#0b3543] px-6 py-4 text-xs font-medium uppercase tracking-[0.18em] text-[#f8f7f3] transition hover:bg-[#15495a]"
+              >
+                Book a Site Visit
+              </a>
+
+              <a
+                href="#contact"
+                className="inline-flex items-center justify-center rounded-md border border-[#0b3543] bg-[#f8f7f3]/80 px-6 py-4 text-xs font-medium uppercase tracking-[0.18em] text-[#0b3543] transition hover:bg-[#0b3543] hover:text-[#f8f7f3]"
+              >
+                Enquire Now
+              </a>
+            </div>
+          </div>
         </div>
-      </main>
-    </div>
+      </section>
+
+      {/* ================= PROJECT HIGHLIGHTS ================= */}
+      <ProjectHighlights />
+
+      {/* ================= WHY CHOOSE PARKVIEW ================= */}
+      <WhyChoose />
+
+      {/* ================= AMENITIES ================= */}
+      <section id="amenities">
+        <Amenities />
+      </section>
+
+      {/* ================= FLOOR PLANS ================= */}
+      <FloorPlans />
+
+      {/* ================= LOCATION ================= */}
+      <section id="location">
+        <Location />
+      </section>
+
+      {/* ================= FOOTER ================= */}
+      <Footer />
+    </main>
   );
 }
