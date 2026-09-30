@@ -7,8 +7,12 @@ const GOOGLE_SCRIPT_URL =
 export default function Footer() {
   const [open, setOpen] = useState(false);
   const [enquiryOpen, setEnquiryOpen] = useState(false);
-  useEffect(() => {
- setEnquiryOpen(true);
+ useEffect(() => {
+  const timer = setTimeout(() => {
+    setEnquiryOpen(true);
+  }, 2000);
+
+  return () => clearTimeout(timer);
 }, []);
 const [isSubmitting, setIsSubmitting] = useState(false);
 const [isPartnerSubmitting, setIsPartnerSubmitting] = useState(false);
