@@ -2,8 +2,12 @@
 
 import { useState } from "react";
 
+const GOOGLE_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbzCxSH4eFtPudCzLoambF6s2zYS0eQK-yu-YNkZTD_gv31j11A9rAcuz0SihAkIqbBrQQ/exec";
 export default function Footer() {
   const [open, setOpen] = useState(false);
+const [isSubmitting, setIsSubmitting] = useState(false);
+const [isPartnerSubmitting, setIsPartnerSubmitting] = useState(false);
 
   return (
     <>
@@ -41,21 +45,69 @@ export default function Footer() {
                 Enquiry
               </h4>
 
-              <form className="space-y-2.5">
+              <form
+  className="space-y-2.5"
+  onSubmit={async (e) => {
+   e.preventDefault();
+
+setIsSubmitting(true);
+
+const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    const payload = {
+      name: formData.get("name"),
+      mobile: formData.get("mobile"),
+      interestedIn: "Not Sure",
+      likeTo: formData.get("likeTo"),
+      leadSource: "Direct",
+      utmSource: "",
+      utmMedium: "",
+      utmCampaign: "",
+      utmContent: "",
+      utmTerm: "",
+    };
+
+    try {
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      alert("Thank you. We will contact you shortly.");
+      form.reset();
+      setIsSubmitting(false);
+    } catch (error) {
+      console.error("Lead submission failed:", error);
+      alert("Something went wrong. Please try again.");
+      setIsSubmitting(false);
+    }
+  }}
+>
                 <input
                   type="text"
+                  name="name"
                   placeholder="Your Name"
+                    required
                   className="w-full rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/40 focus:border-[#b38a4a] focus:outline-none"
                 />
 
                 <input
                   type="tel"
+                  name="mobile"
                   placeholder="Phone Number"
+                  required
                   className="w-full rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/40 focus:border-[#b38a4a] focus:outline-none"
                 />
 
                 <select
+                name="likeTo"
                   defaultValue=""
+                  required
                   className="w-full rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-[#b38a4a] focus:outline-none"
                 >
                   <option value="" disabled className="text-gray-700">
@@ -75,12 +127,13 @@ export default function Footer() {
                   </option>
                 </select>
 
-                <button
-                  type="submit"
-                  className="w-full rounded-md bg-[#b38a4a] py-2 text-sm font-medium text-[#f8f7f3] transition hover:opacity-90"
-                >
-                  Submit Enquiry
-                </button>
+               <button
+  type="submit"
+  disabled={isSubmitting}
+  className="w-full rounded-md bg-[#b38a4a] py-2 text-sm font-medium text-[#f8f7f3] transition hover:opacity-90"
+>
+  {isSubmitting ? "Submitting..." : "Submit Enquiry"}
+</button>
               </form>
             </div>
 
@@ -162,31 +215,82 @@ export default function Footer() {
               our team will get in touch with you.
             </p>
 
-            <form className="mt-5 space-y-3">
+            <form
+  className="mt-5 space-y-3"
+  onSubmit={async (e) => {
+    e.preventDefault();
+
+    setIsPartnerSubmitting(true);
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    const payload = {
+      name: formData.get("name"),
+      mobile: formData.get("mobile"),
+      interestedIn: "Channel Partner",
+      likeTo: "Channel Partner",
+      leadSource: "Channel Partner",
+      utmSource: "",
+      utmMedium: "",
+      utmCampaign: "",
+      utmContent: "",
+      utmTerm: "",
+    };
+
+    try {
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      alert("Thank you. Our team will contact you shortly.");
+      form.reset();
+      setIsPartnerSubmitting(false);
+      setOpen(false);
+    } catch (error) {
+      console.error("Channel Partner submission failed:", error);
+      alert("Something went wrong. Please try again.");
+      setIsPartnerSubmitting(false);
+    }
+  }}
+>
               <input
                 type="text"
+                 name="name"
                 placeholder="Your Name"
+                required
                 className="w-full rounded-lg border border-[#0b3543]/10 bg-white px-4 py-3 text-sm text-[#0b3543] outline-none focus:border-[#b38a4a]"
               />
 
               <input
                 type="tel"
                 placeholder="Mobile Number"
+                name="mobile"
+                required
                 className="w-full rounded-lg border border-[#0b3543]/10 bg-white px-4 py-3 text-sm text-[#0b3543] outline-none focus:border-[#b38a4a]"
               />
 
               <input
                 type="text"
                 placeholder="Location"
+                 required
                 className="w-full rounded-lg border border-[#0b3543]/10 bg-white px-4 py-3 text-sm text-[#0b3543] outline-none focus:border-[#b38a4a]"
               />
 
               <button
-                type="submit"
-                className="w-full rounded-lg bg-[#0b3543] py-3 text-sm font-medium text-[#f8f7f3] transition hover:bg-[#15495a]"
-              >
-                Become a Channel Partner →
-              </button>
+  type="submit"
+  disabled={isPartnerSubmitting}
+  className="w-full rounded-lg bg-[#0b3543] py-3 text-sm font-medium text-[#f8f7f3] transition hover:bg-[#15495a]"
+>
+  {isPartnerSubmitting
+    ? "Submitting..."
+    : "Become a Channel Partner →"}
+</button>
             </form>
 
             <p className="mt-4 text-xs leading-5 text-[#0b3543]/55">
