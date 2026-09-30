@@ -1,11 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const GOOGLE_SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycbzCxSH4eFtPudCzLoambF6s2zYS0eQK-yu-YNkZTD_gv31j11A9rAcuz0SihAkIqbBrQQ/exec";
 export default function Footer() {
   const [open, setOpen] = useState(false);
+  const [enquiryOpen, setEnquiryOpen] = useState(false);
+  useEffect(() => {
+ setEnquiryOpen(true);
+}, []);
 const [isSubmitting, setIsSubmitting] = useState(false);
 const [isPartnerSubmitting, setIsPartnerSubmitting] = useState(false);
 
@@ -188,7 +192,118 @@ const form = e.currentTarget;
           </div>
         </div>
       </footer>
+{/* ===== Enquiry Popup ===== */}
+{enquiryOpen && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 p-4">
+    <div className="relative w-full max-w-md rounded-2xl bg-[#f8f7f3] p-6 shadow-2xl">
 
+      {/* Close */}
+      <button
+        onClick={() => setEnquiryOpen(false)}
+        className="absolute right-4 top-4 text-2xl text-[#0b3543]/60 hover:text-[#0b3543]"
+        aria-label="Close"
+      >
+        ×
+      </button>
+
+      <p className="text-[11px] font-medium uppercase tracking-[0.35em] text-[#b38a4a]">
+        ParkView
+      </p>
+
+      <h2 className="mt-2 font-serif text-2xl leading-snug text-[#0b3543]">
+        Find Your Place at ParkView
+      </h2>
+
+      <p className="mt-3 text-sm leading-6 text-[#0b3543]/70">
+        Interested in ParkView? Leave your details and our team will get in touch with you.
+      </p>
+
+      <form
+        className="mt-5 space-y-3"
+        onSubmit={async (e) => {
+          e.preventDefault();
+
+          setIsSubmitting(true);
+
+          const form = e.currentTarget;
+          const formData = new FormData(form);
+
+          const payload = {
+            name: formData.get("popupName"),
+            mobile: formData.get("popupMobile"),
+            interestedIn: "Not Sure",
+            likeTo: formData.get("popupLikeTo"),
+            leadSource: "Direct",
+            utmSource: "",
+            utmMedium: "",
+            utmCampaign: "",
+            utmContent: "",
+            utmTerm: "",
+          };
+
+          try {
+            await fetch(GOOGLE_SCRIPT_URL, {
+              method: "POST",
+              mode: "no-cors",
+              headers: {
+                "Content-Type": "text/plain;charset=utf-8",
+              },
+              body: JSON.stringify(payload),
+            });
+
+            alert("Thank you. We will contact you shortly.");
+            form.reset();
+            setIsSubmitting(false);
+            setEnquiryOpen(false);
+          } catch (error) {
+            console.error("Lead submission failed:", error);
+            alert("Something went wrong. Please try again.");
+            setIsSubmitting(false);
+          }
+        }}
+      >
+        <input
+          type="text"
+          name="popupName"
+          placeholder="Your Name"
+          required
+          className="w-full rounded-lg border border-[#0b3543]/10 bg-white px-4 py-3 text-sm text-[#0b3543] outline-none focus:border-[#b38a4a]"
+        />
+
+        <input
+          type="tel"
+          name="popupMobile"
+          placeholder="Phone Number"
+          required
+          className="w-full rounded-lg border border-[#0b3543]/10 bg-white px-4 py-3 text-sm text-[#0b3543] outline-none focus:border-[#b38a4a]"
+        />
+
+        <select
+          name="popupLikeTo"
+          defaultValue=""
+          required
+          className="w-full rounded-lg border border-[#0b3543]/10 bg-white px-4 py-3 text-sm text-[#0b3543] outline-none focus:border-[#b38a4a]"
+        >
+          <option value="" disabled>
+            I'd like to...
+          </option>
+          <option value="visit">Book a Site Visit</option>
+          <option value="callback">Request a Call Back</option>
+          <option value="brochure">Get the Brochure</option>
+          <option value="pricing">Know Pricing</option>
+        </select>
+
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full rounded-lg bg-[#b38a4a] py-3 text-sm font-medium text-[#f8f7f3] transition hover:opacity-90"
+        >
+          {isSubmitting ? "Submitting..." : "Submit Enquiry"}
+        </button>
+      </form>
+    </div>
+  </div>
+)}
       {/* ===== Channel Partner Modal ===== */}
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 p-4">
